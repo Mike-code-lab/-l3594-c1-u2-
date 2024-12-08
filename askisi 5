@@ -1,0 +1,30 @@
+# εισαγωγή βιβλιοθηκών - πακέτων
+import pycaret
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from pycaret.classification import *
+
+# εισαγωγή του συνόλου δεδομένων
+url = 'https://raw.githubusercontent.com/kdemertzis/EKPA/main/Data/dga_domain.csv'  # Αλλάξτε το URL εδώ
+df = pd.read_csv(url)
+
+# έλεγχος σχήματος συνόλου δεδομένων
+print(df.shape)
+
+# ανακάτεμα των δεδομένων
+df = df.sample(frac=1)
+print(df.head())
+
+# εγκατάσταση του συνόλου δεδομένων
+grid = setup(data=df, target=df.columns[-1], html=False, verbose=False)
+
+# σύγκριση των διαθέσιμων μοντέλων ΜΜ
+best = compare_models(cross_validation=False, n_select=1)
+%load_ext tensorboard
+
+# αναφορά των υπερπαραμέτρων του μοντέλου με την υψηλότερη απόδοση
+print(best)
+
+# μέτρα αξιολόγησης του μοντέλου με την υψηλότερη απόδοση
+evaluate_model(best)
